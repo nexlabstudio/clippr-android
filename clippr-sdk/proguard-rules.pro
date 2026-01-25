@@ -11,3 +11,6 @@
 
 # Keep Install Referrer
 -keep class com.android.installreferrer.** { *; }
+
+# Keep Google Play Services Ads Identifier
+-keep class com.google.android.gms.ads.identifier.** { *; }

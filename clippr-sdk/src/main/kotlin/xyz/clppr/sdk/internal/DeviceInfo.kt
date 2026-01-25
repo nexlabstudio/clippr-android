@@ -15,11 +15,20 @@ internal class DeviceInfo(
     private val storage: Storage
 ) {
     
+    // Cached GAID (fetched asynchronously)
+    private var cachedGaid: String? = null
+    
     /**
      * Unique device identifier (persisted)
      */
     val deviceId: String
         get() = storage.deviceId
+    
+    /**
+     * Google Advertising ID (cached after first fetch)
+     */
+    val advertisingId: String?
+        get() = cachedGaid
     
     /**
      * Platform identifier
@@ -93,6 +102,13 @@ internal class DeviceInfo(
         get() = context.packageName
     
     /**
+     * Fetch and cache the GAID. Call this during initialization.
+     */
+    suspend fun fetchAdvertisingId() {
+        cachedGaid = AdvertisingIdHelper.getAdvertisingId(context)
+    }
+    
+    /**
      * Build match request payload
      */
     fun buildMatchPayload(installReferrer: String? = null): Map<String, Any?> {
@@ -104,6 +120,11 @@ internal class DeviceInfo(
             "timezone" to timezone,
             "language" to language
         )
+        
+        // Add GAID if available (for paid ad attribution)
+        cachedGaid?.let {
+            payload["advertising_id"] = it
+        }
         
         // Add install referrer if available (Android-specific, enables deterministic matching)
         if (installReferrer != null) {
@@ -117,12 +138,19 @@ internal class DeviceInfo(
      * Build install tracking payload
      */
     fun buildInstallPayload(): Map<String, Any?> {
-        return mapOf(
+        val payload = mutableMapOf<String, Any?>(
             "device_id" to deviceId,
             "platform" to platform,
             "os_version" to osVersion,
             "app_version" to appVersion,
             "device_model" to deviceModel
         )
+        
+        // Add GAID if available
+        cachedGaid?.let {
+            payload["advertising_id"] = it
+        }
+        
+        return payload
     }
 }

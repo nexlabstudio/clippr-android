@@ -1,0 +1,46 @@
+package xyz.clppr.sdk.internal
+
+import android.content.Context
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+/**
+ * Helper for retrieving Google Advertising ID (GAID).
+ * Used for paid ad attribution (Facebook Ads, Google Ads, etc.)
+ */
+internal object AdvertisingIdHelper {
+    
+    /**
+     * Get the Google Advertising ID.
+     * Returns null if:
+     * - User has opted out of ad tracking ("Limit Ad Tracking" enabled)
+     * - Google Play Services not available
+     * - Any error occurs
+     */
+    suspend fun getAdvertisingId(context: Context): String? = withContext(Dispatchers.IO) {
+        try {
+            val adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context)
+            
+            // Respect user's choice to limit ad tracking
+            if (adInfo.isLimitAdTrackingEnabled) {
+                Logger.debug("User has limited ad tracking, GAID not available")
+                return@withContext null
+            }
+            
+            val gaid = adInfo.id
+            
+            // Check for zeroed out ID (also indicates opt-out)
+            if (gaid == "00000000-0000-0000-0000-000000000000") {
+                Logger.debug("GAID is zeroed out, user has opted out")
+                return@withContext null
+            }
+            
+            Logger.debug("GAID retrieved successfully")
+            gaid
+        } catch (e: Exception) {
+            Logger.error("Failed to get GAID", e)
+            null
+        }
+    }
+}
