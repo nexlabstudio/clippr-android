@@ -10,7 +10,7 @@ Add the dependency to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("xyz.useclippr:clippr:0.0.1")
+    implementation("xyz.useclippr:clippr:0.0.3")
 }
 ```
 
@@ -18,7 +18,7 @@ Or with Groovy `build.gradle`:
 
 ```groovy
 dependencies {
-    implementation 'xyz.useclippr:clippr:0.0.1'
+    implementation 'xyz.useclippr:clippr:0.0.3'
 }
 ```
 
@@ -40,7 +40,7 @@ Then add the dependency:
 
 ```kotlin
 dependencies {
-    implementation("com.github.nexlabstudio:clippr-android:0.0.1")
+    implementation("com.github.nexlabstudio:clippr-android:0.0.3")
 }
 ```
 
