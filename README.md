@@ -4,7 +4,7 @@ Deep linking and mobile attribution SDK for Android.
 
 ## Installation
 
-### Gradle (Maven Central)
+### Maven Central
 
 Add the dependency to your app's `build.gradle.kts`:
 
@@ -19,6 +19,28 @@ Or with Groovy `build.gradle`:
 ```groovy
 dependencies {
     implementation 'xyz.useclippr:clippr:0.0.1'
+}
+```
+
+### JitPack
+
+Add JitPack repository to your `settings.gradle.kts`:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+```
+
+Then add the dependency:
+
+```kotlin
+dependencies {
+    implementation("com.github.nexlabstudio:clippr-android:0.0.1")
 }
 ```
 
