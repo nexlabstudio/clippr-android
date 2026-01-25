@@ -169,6 +169,56 @@ Clippr.track("button_clicked", null) { error ->
 }
 ```
 
+### 5. Create Short Links (Optional)
+
+```kotlin
+import xyz.useclippr.sdk.models.LinkParameters
+import xyz.useclippr.sdk.models.SocialMetaTags
+
+// Create a simple short link
+lifecycleScope.launch {
+    val shortLink = Clippr.createLink(
+        LinkParameters(path = "/product/123")
+    )
+    Log.d("Clippr", "Short link: ${shortLink.url}")
+}
+
+// Create a link with attribution and social tags
+lifecycleScope.launch {
+    val shortLink = Clippr.createLink(
+        LinkParameters(
+            path = "/product/123",
+            metadata = mapOf("discount" to "20%"),
+            campaign = "summer_sale",
+            source = "facebook",
+            medium = "social",
+            alias = "summer-deal",  // Custom short code
+            socialTags = SocialMetaTags(
+                title = "Check out this deal!",
+                description = "Get 20% off on selected items",
+                imageUrl = "https://example.com/promo.jpg"
+            )
+        )
+    )
+
+    // Share the link
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, shortLink.url)
+    }
+    startActivity(Intent.createChooser(shareIntent, "Share via"))
+}
+
+// Using callback (Java-friendly)
+Clippr.createLink(LinkParameters("/referral/user123")) { shortLink, error ->
+    if (error != null) {
+        Log.e("Clippr", "Failed to create link", error)
+    } else {
+        Log.d("Clippr", "Created: ${shortLink?.url}")
+    }
+}
+```
+
 ## Java Usage
 
 ```java
@@ -215,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
 | `handle(intent)` | Handle incoming App Links |
 | `track(eventName, params)` | Track a custom event |
 | `trackRevenue(eventName, revenue, currency, params)` | Track a revenue event |
+| `createLink(parameters)` | Create a short link for sharing |
 
 ### ClipprLink
 
@@ -234,6 +285,34 @@ public class MainActivity extends AppCompatActivity {
 | `DETERMINISTIC` | Matched via Install Referrer (100% accurate) |
 | `PROBABILISTIC` | Matched via device fingerprinting |
 | `NONE` | No match found |
+
+### LinkParameters
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `path` | `String` | Deep link path (e.g., "/product/123") |
+| `metadata` | `Map<String, Any?>?` | Custom metadata to attach |
+| `campaign` | `String?` | Campaign name for attribution |
+| `source` | `String?` | Traffic source (e.g., "facebook") |
+| `medium` | `String?` | Marketing medium (e.g., "social") |
+| `alias` | `String?` | Custom short code |
+| `socialTags` | `SocialMetaTags?` | Social preview tags |
+
+### SocialMetaTags
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `title` | `String?` | Title for social previews |
+| `description` | `String?` | Description for social previews |
+| `imageUrl` | `String?` | Image URL for social previews |
+
+### ShortLink
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `url` | `String` | The full short URL |
+| `shortCode` | `String` | The short code or alias |
+| `path` | `String` | The original deep link path |
 
 ## Debug Mode
 
