@@ -89,9 +89,10 @@ object Clippr {
         Logger.info("Clippr SDK initialized")
         
         // Fetch GAID in background (for paid ad attribution)
-        scope.launch {
-            deviceInfo?.fetchAdvertisingId()
-        }
+        // TODO(mastersam07): Enable this for GAID
+        // scope.launch {
+        //    deviceInfo?.fetchAdvertisingId()
+        // }
         
         // Start checking for deferred link in background
         startDeferredLinkCheck()

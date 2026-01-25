@@ -13,4 +13,5 @@
 -keep class com.android.installreferrer.** { *; }
 
 # Keep Google Play Services Ads Identifier
--keep class com.google.android.gms.ads.identifier.** { *; }
+# TODO(mastersam07): Enable this for GAID
+# -keep class com.google.android.gms.ads.identifier.** { *; }

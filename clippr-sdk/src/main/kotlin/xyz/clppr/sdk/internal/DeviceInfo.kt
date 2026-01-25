@@ -16,7 +16,8 @@ internal class DeviceInfo(
 ) {
     
     // Cached GAID (fetched asynchronously)
-    private var cachedGaid: String? = null
+    // TODO(mastersam07): Enable this for GAID
+    // private var cachedGaid: String? = null
     
     /**
      * Unique device identifier (persisted)
@@ -27,8 +28,9 @@ internal class DeviceInfo(
     /**
      * Google Advertising ID (cached after first fetch)
      */
-    val advertisingId: String?
-        get() = cachedGaid
+    // TODO(mastersam07): Enable this for GAID
+    // val advertisingId: String?
+    //    get() = cachedGaid
     
     /**
      * Platform identifier
@@ -104,9 +106,10 @@ internal class DeviceInfo(
     /**
      * Fetch and cache the GAID. Call this during initialization.
      */
-    suspend fun fetchAdvertisingId() {
-        cachedGaid = AdvertisingIdHelper.getAdvertisingId(context)
-    }
+    // TODO(mastersam07): Enable this for GAID
+    // suspend fun fetchAdvertisingId() {
+    //    cachedGaid = AdvertisingIdHelper.getAdvertisingId(context)
+    // }
     
     /**
      * Build match request payload
@@ -122,9 +125,10 @@ internal class DeviceInfo(
         )
         
         // Add GAID if available (for paid ad attribution)
-        cachedGaid?.let {
-            payload["advertising_id"] = it
-        }
+        // TODO(mastersam07): Enable this for GAID
+        // cachedGaid?.let {
+        //    payload["advertising_id"] = it
+        // }
         
         // Add install referrer if available (Android-specific, enables deterministic matching)
         if (installReferrer != null) {
@@ -147,9 +151,10 @@ internal class DeviceInfo(
         )
         
         // Add GAID if available
-        cachedGaid?.let {
-            payload["advertising_id"] = it
-        }
+        // TODO(mastersam07): Enable this for GAID
+        // cachedGaid?.let {
+        //    payload["advertising_id"] = it
+        // }
         
         return payload
     }
