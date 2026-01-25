@@ -9,7 +9,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import xyz.useclippr.sdk.models.Attribution
 import xyz.useclippr.sdk.models.ClipprConfig
+import xyz.useclippr.sdk.models.LinkParameters
 import xyz.useclippr.sdk.models.MatchType
+import xyz.useclippr.sdk.models.ShortLink
 import java.util.concurrent.TimeUnit
 
 /**
@@ -104,7 +106,43 @@ internal class APIClient(private val config: ClipprConfig) {
         post("/v1/sdk/events", body)
         Logger.debug("Event '$eventName' tracked successfully")
     }
-    
+
+    /**
+     * Create a short link
+     */
+    suspend fun createLink(parameters: LinkParameters): ShortLink = withContext(Dispatchers.IO) {
+        val body = mutableMapOf<String, Any?>(
+            "deep_link_path" to parameters.path
+        )
+
+        parameters.metadata?.let { body["metadata"] = it }
+        parameters.campaign?.let { body["campaign"] = it }
+        parameters.source?.let { body["source"] = it }
+        parameters.medium?.let { body["medium"] = it }
+        parameters.alias?.let { body["alias"] = it }
+
+        parameters.socialTags?.let { tags ->
+            tags.title?.let { body["og_title"] = it }
+            tags.description?.let { body["og_description"] = it }
+            tags.imageUrl?.let { body["og_image_url"] = it }
+        }
+
+        val response = post("/v1/sdk/links", body)
+
+        val shortUrl = response.optString("short_url").takeIf { it.isNotEmpty() }
+            ?: throw ClipprException.InvalidResponse()
+        val shortCode = response.optString("short_code").takeIf { it.isNotEmpty() }
+            ?: throw ClipprException.InvalidResponse()
+
+        Logger.debug("Short link created: $shortUrl")
+
+        ShortLink(
+            url = shortUrl,
+            shortCode = shortCode,
+            path = parameters.path
+        )
+    }
+
     /**
      * Make a POST request
      */

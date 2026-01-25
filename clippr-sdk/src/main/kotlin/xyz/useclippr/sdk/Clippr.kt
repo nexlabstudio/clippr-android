@@ -13,7 +13,9 @@ import kotlinx.coroutines.sync.withLock
 import xyz.useclippr.sdk.internal.*
 import xyz.useclippr.sdk.models.ClipprConfig
 import xyz.useclippr.sdk.models.ClipprLink
+import xyz.useclippr.sdk.models.LinkParameters
 import xyz.useclippr.sdk.models.MatchType
+import xyz.useclippr.sdk.models.ShortLink
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -111,7 +113,6 @@ object Clippr {
             return null
         }
         
-        // Mark that we've retrieved the initial link
         initialLinkRetrieved = true
         
         // If we have a direct link from App Link, return it immediately
@@ -219,7 +220,35 @@ object Clippr {
             }
         }
     }
-    
+
+    /**
+     * Create a short link for sharing
+     *
+     * @param parameters Link parameters including path, metadata, and social tags
+     * @return The created short link
+     * @throws ClipprException if creation fails
+     */
+    @JvmStatic
+    suspend fun createLink(parameters: LinkParameters): ShortLink {
+        val client = apiClient ?: throw ClipprException.NotInitialized()
+        return client.createLink(parameters)
+    }
+
+    /**
+     * Create a short link with a callback (for Java interop)
+     */
+    @JvmStatic
+    fun createLink(parameters: LinkParameters, callback: (ShortLink?, Exception?) -> Unit) {
+        scope.launch {
+            try {
+                val link = createLink(parameters)
+                callback(link, null)
+            } catch (e: Exception) {
+                callback(null, e)
+            }
+        }
+    }
+
     /**
      * Handle an App Link intent.
      * Call this from your Activity's onCreate or onNewIntent.
@@ -257,8 +286,6 @@ object Clippr {
         return true
     }
     
-    // MARK: - Internal Methods
-    
     private fun startDeferredLinkCheck() {
         val storage = this.storage ?: return
         
@@ -292,7 +319,6 @@ object Clippr {
         Logger.debug("Checking for deferred deep link...")
         
         try {
-            // Get install referrer (Android's secret weapon for 100% attribution)
             val referrerResult = referrerHelper.getInstallReferrer()
             val referrer = referrerResult?.referrer
             
