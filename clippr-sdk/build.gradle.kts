@@ -38,9 +38,6 @@ dependencies {
     // OkHttp for networking
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     
-    // JSON parsing
-    implementation("org.json:json:20231013")
-    
     // Play Install Referrer (for deterministic attribution)
     implementation("com.android.installreferrer:installreferrer:2.2")
     

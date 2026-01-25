@@ -57,7 +57,7 @@ internal class APIClient(private val config: ClipprConfig) {
         
         MatchResponse(
             deepLinkPath = response.optString("deep_link_path", ""),
-            metadata = response.optJSONObject("metadata")?.toMap(),
+            metadata = response.optJSONObject("metadata")?.jsonToMap(),
             matchType = MatchType.fromString(response.optString("match_type")),
             confidence = response.optDouble("confidence").takeIf { !it.isNaN() },
             attribution = attribution
@@ -151,11 +151,11 @@ internal class APIClient(private val config: ClipprConfig) {
     /**
      * Convert JSONObject to Map
      */
-    private fun JSONObject.toMap(): Map<String, Any?> {
+    private fun JSONObject.jsonToMap(): Map<String, Any?> {
         val map = mutableMapOf<String, Any?>()
         keys().forEach { key ->
             map[key] = when (val value = get(key)) {
-                is JSONObject -> value.toMap()
+                is JSONObject -> value.jsonToMap()
                 JSONObject.NULL -> null
                 else -> value
             }
