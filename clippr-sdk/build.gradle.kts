@@ -68,7 +68,7 @@ afterEvaluate {
                 from(components["release"])
                 
                 groupId = "xyz.useclippr"
-                artifactId = "clippr-sdk"
+                artifactId = "clippr"
                 version = "0.0.1"
                 
                 pom {
