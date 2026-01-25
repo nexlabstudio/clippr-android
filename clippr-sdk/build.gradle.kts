@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "xyz.clppr.sdk"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
@@ -69,12 +69,12 @@ afterEvaluate {
                 
                 groupId = "xyz.clppr"
                 artifactId = "clippr-sdk"
-                version = "1.0.0"
+                version = "0.0.1"
                 
                 pom {
                     name.set("Clippr SDK")
                     description.set("Deep linking and mobile attribution SDK for Android")
-                    url.set("https://github.com/clippr/clippr-android-sdk")
+                    url.set("https://github.com/nexlabstudio/clippr-android")
                     
                     licenses {
                         license {
@@ -86,13 +86,13 @@ afterEvaluate {
                     developers {
                         developer {
                             id.set("clippr")
-                            name.set("Clippr")
-                            email.set("sdk@clppr.xyz")
+                            name.set("Nexlab Studio")
+                            email.set("engr@nexlab.studio")
                         }
                     }
                     
                     scm {
-                        url.set("https://github.com/clippr/clippr-android-sdk")
+                        url.set("https://github.com/nexlabstudio/clippr-android")
                     }
                 }
             }
