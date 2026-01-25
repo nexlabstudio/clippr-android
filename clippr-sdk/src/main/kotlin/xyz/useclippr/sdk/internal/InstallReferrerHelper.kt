@@ -1,4 +1,4 @@
-package xyz.clppr.sdk.internal
+package xyz.useclippr.sdk.internal
 
 import android.content.Context
 import com.android.installreferrer.api.InstallReferrerClient

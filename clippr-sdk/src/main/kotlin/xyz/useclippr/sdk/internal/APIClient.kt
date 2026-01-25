@@ -1,4 +1,4 @@
-package xyz.clppr.sdk.internal
+package xyz.useclippr.sdk.internal
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -7,9 +7,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import xyz.clppr.sdk.models.Attribution
-import xyz.clppr.sdk.models.ClipprConfig
-import xyz.clppr.sdk.models.MatchType
+import xyz.useclippr.sdk.models.Attribution
+import xyz.useclippr.sdk.models.ClipprConfig
+import xyz.useclippr.sdk.models.MatchType
 import java.util.concurrent.TimeUnit
 
 /**

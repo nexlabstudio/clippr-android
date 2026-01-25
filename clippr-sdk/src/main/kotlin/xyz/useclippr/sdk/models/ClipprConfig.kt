@@ -1,4 +1,4 @@
-package xyz.clppr.sdk.models
+package xyz.useclippr.sdk.models
 
 /**
  * Configuration for the Clippr SDK

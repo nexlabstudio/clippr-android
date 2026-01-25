@@ -2,5 +2,5 @@
 # These rules are automatically applied to apps using the SDK
 
 # Keep public API
--keep class xyz.clppr.sdk.Clippr { *; }
--keep class xyz.clppr.sdk.models.** { *; }
+-keep class xyz.useclippr.sdk.Clippr { *; }
+-keep class xyz.useclippr.sdk.models.** { *; }

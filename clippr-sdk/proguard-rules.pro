@@ -1,8 +1,8 @@
 # ClipprSDK ProGuard Rules
 
 # Keep public API
--keep class xyz.clppr.sdk.Clippr { *; }
--keep class xyz.clppr.sdk.models.** { *; }
+-keep class xyz.useclippr.sdk.Clippr { *; }
+-keep class xyz.useclippr.sdk.models.** { *; }
 
 # Keep OkHttp
 -dontwarn okhttp3.**

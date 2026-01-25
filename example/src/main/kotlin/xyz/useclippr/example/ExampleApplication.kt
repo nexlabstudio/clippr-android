@@ -1,7 +1,7 @@
-package xyz.clppr.example
+package xyz.useclippr.example
 
 import android.app.Application
-import xyz.clppr.sdk.Clippr
+import xyz.useclippr.sdk.Clippr
 
 class ExampleApplication : Application() {
     

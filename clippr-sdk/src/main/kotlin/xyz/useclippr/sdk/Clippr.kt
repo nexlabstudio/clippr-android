@@ -1,4 +1,4 @@
-package xyz.clppr.sdk
+package xyz.useclippr.sdk
 
 import android.app.Application
 import android.content.Context
@@ -10,10 +10,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import xyz.clppr.sdk.internal.*
-import xyz.clppr.sdk.models.ClipprConfig
-import xyz.clppr.sdk.models.ClipprLink
-import xyz.clppr.sdk.models.MatchType
+import xyz.useclippr.sdk.internal.*
+import xyz.useclippr.sdk.models.ClipprConfig
+import xyz.useclippr.sdk.models.ClipprLink
+import xyz.useclippr.sdk.models.MatchType
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

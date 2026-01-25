@@ -1,4 +1,4 @@
-package xyz.clppr.example
+package xyz.useclippr.example
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,9 +6,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import xyz.clppr.example.databinding.ActivityMainBinding
-import xyz.clppr.sdk.Clippr
-import xyz.clppr.sdk.models.ClipprLink
+import xyz.useclippr.example.databinding.ActivityMainBinding
+import xyz.useclippr.sdk.Clippr
+import xyz.useclippr.sdk.models.ClipprLink
 
 class MainActivity : AppCompatActivity() {
     

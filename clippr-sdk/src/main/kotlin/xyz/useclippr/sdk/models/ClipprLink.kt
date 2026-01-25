@@ -1,4 +1,4 @@
-package xyz.clppr.sdk.models
+package xyz.useclippr.sdk.models
 
 /**
  * Represents a deep link received by the SDK

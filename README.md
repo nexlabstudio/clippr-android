@@ -10,7 +10,7 @@ Add the dependency to your app's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("xyz.clppr:clippr-sdk:1.0.0")
+    implementation("xyz.useclippr:clippr-sdk:0.0.1")
 }
 ```
 
@@ -18,7 +18,7 @@ Or with Groovy `build.gradle`:
 
 ```groovy
 dependencies {
-    implementation 'xyz.clppr:clippr-sdk:1.0.0'
+    implementation 'xyz.useclippr:clippr-sdk:0.0.1'
 }
 ```
 
@@ -27,7 +27,7 @@ dependencies {
 ### 1. Initialize the SDK
 
 ```kotlin
-import xyz.clppr.sdk.Clippr
+import xyz.useclippr.sdk.Clippr
 
 class MyApplication : Application() {
     override fun onCreate() {
@@ -45,8 +45,8 @@ class MyApplication : Application() {
 ### 2. Handle Deep Links
 
 ```kotlin
-import xyz.clppr.sdk.Clippr
-import xyz.clppr.sdk.models.ClipprLink
+import xyz.useclippr.sdk.Clippr
+import xyz.useclippr.sdk.models.ClipprLink
 
 class MainActivity : AppCompatActivity() {
     
@@ -150,8 +150,8 @@ Clippr.track("button_clicked", null) { error ->
 ## Java Usage
 
 ```java
-import xyz.clppr.sdk.Clippr;
-import xyz.clppr.sdk.models.ClipprLink;
+import xyz.useclippr.sdk.Clippr;
+import xyz.useclippr.sdk.models.ClipprLink;
 
 public class MainActivity extends AppCompatActivity {
     

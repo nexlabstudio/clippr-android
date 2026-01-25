@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "xyz.clppr.example"
+    namespace = "xyz.useclippr.example"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "xyz.clppr.example"
+        applicationId = "xyz.useclippr.example"
         minSdk = 21
         targetSdk = 34
         versionCode = 1

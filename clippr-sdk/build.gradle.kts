@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "xyz.clppr.sdk"
+    namespace = "xyz.useclippr.sdk"
     compileSdk = 35
 
     defaultConfig {
@@ -67,7 +67,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 from(components["release"])
                 
-                groupId = "xyz.clppr"
+                groupId = "xyz.useclippr"
                 artifactId = "clippr-sdk"
                 version = "0.0.1"
                 
