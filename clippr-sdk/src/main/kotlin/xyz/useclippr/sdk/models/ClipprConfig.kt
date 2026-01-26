@@ -17,6 +17,6 @@ data class ClipprConfig(
     val baseUrl: String = DEFAULT_BASE_URL
 ) {
     companion object {
-        const val DEFAULT_BASE_URL = "https://api.clppr.xyz"
+        const val DEFAULT_BASE_URL = "https://api.clppr.xyz/v1"
     }
 }

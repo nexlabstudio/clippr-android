@@ -39,10 +39,10 @@ internal class APIClient(private val config: ClipprConfig) {
     
     /**
      * Check for deferred deep link match
-     * POST /v1/sdk/match
+     * POST /sdk/match
      */
     suspend fun match(payload: Map<String, Any?>): MatchResponse? = withContext(Dispatchers.IO) {
-        val response = post("/v1/sdk/match", payload)
+        val response = post("/sdk/match", payload)
         
         val matched = response.optBoolean("matched", false)
         if (!matched) {
@@ -68,16 +68,16 @@ internal class APIClient(private val config: ClipprConfig) {
     
     /**
      * Track app install
-     * POST /v1/sdk/install
+     * POST /sdk/install
      */
     suspend fun trackInstall(payload: Map<String, Any?>) = withContext(Dispatchers.IO) {
-        post("/v1/sdk/install", payload)
+        post("/sdk/install", payload)
         Logger.debug("Install tracked successfully")
     }
     
     /**
      * Track custom event
-     * POST /v1/sdk/events
+     * POST /sdk/events
      */
     suspend fun trackEvent(
         deviceId: String,
@@ -103,7 +103,7 @@ internal class APIClient(private val config: ClipprConfig) {
             body["currency"] = currency
         }
         
-        post("/v1/sdk/events", body)
+        post("/sdk/events", body)
         Logger.debug("Event '$eventName' tracked successfully")
     }
 
@@ -122,12 +122,12 @@ internal class APIClient(private val config: ClipprConfig) {
         parameters.alias?.let { body["alias"] = it }
 
         parameters.socialTags?.let { tags ->
-            tags.title?.let { body["og_title"] = it }
-            tags.description?.let { body["og_description"] = it }
-            tags.imageUrl?.let { body["og_image_url"] = it }
+            tags.title?.let { body["social_title"] = it }
+            tags.description?.let { body["social_description"] = it }
+            tags.imageUrl?.let { body["social_image_url"] = it }
         }
 
-        val response = post("/v1/sdk/links", body)
+        val response = post("/sdk/links", body)
 
         val shortUrl = response.optString("short_url").takeIf { it.isNotEmpty() }
             ?: throw ClipprException.InvalidResponse()
