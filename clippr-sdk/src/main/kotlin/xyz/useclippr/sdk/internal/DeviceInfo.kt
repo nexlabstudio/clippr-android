@@ -14,23 +14,14 @@ internal class DeviceInfo(
     private val context: Context,
     private val storage: Storage
 ) {
-    
-    // Cached GAID (fetched asynchronously)
-    // TODO(mastersam07): Enable this for GAID
-    // private var cachedGaid: String? = null
-    
-    /**
-     * Unique device identifier (persisted)
-     */
+
+    private var cachedGaid: String? = null
+
     val deviceId: String
         get() = storage.deviceId
-    
-    /**
-     * Google Advertising ID (cached after first fetch)
-     */
-    // TODO(mastersam07): Enable this for GAID
-    // val advertisingId: String?
-    //    get() = cachedGaid
+
+    val advertisingId: String?
+        get() = cachedGaid
     
     /**
      * Platform identifier
@@ -103,17 +94,10 @@ internal class DeviceInfo(
     val packageName: String
         get() = context.packageName
     
-    /**
-     * Fetch and cache the GAID. Call this during initialization.
-     */
-    // TODO(mastersam07): Enable this for GAID
-    // suspend fun fetchAdvertisingId() {
-    //    cachedGaid = AdvertisingIdHelper.getAdvertisingId(context)
-    // }
-    
-    /**
-     * Build match request payload
-     */
+    suspend fun fetchAdvertisingId() {
+        cachedGaid = AdvertisingIdHelper.getAdvertisingId(context)
+    }
+
     fun buildMatchPayload(installReferrer: String? = null): Map<String, Any?> {
         val payload = mutableMapOf<String, Any?>(
             "device_id" to deviceId,
@@ -123,24 +107,18 @@ internal class DeviceInfo(
             "timezone" to timezone,
             "language" to language
         )
-        
-        // Add GAID if available (for paid ad attribution)
-        // TODO(mastersam07): Enable this for GAID
-        // cachedGaid?.let {
-        //    payload["advertising_id"] = it
-        // }
-        
-        // Add install referrer if available (Android-specific, enables deterministic matching)
+
+        cachedGaid?.let {
+            payload["advertising_id"] = it
+        }
+
         if (installReferrer != null) {
             payload["install_referrer"] = installReferrer
         }
-        
+
         return payload
     }
-    
-    /**
-     * Build install tracking payload
-     */
+
     fun buildInstallPayload(): Map<String, Any?> {
         val payload = mutableMapOf<String, Any?>(
             "device_id" to deviceId,
@@ -149,13 +127,11 @@ internal class DeviceInfo(
             "app_version" to appVersion,
             "device_model" to deviceModel
         )
-        
-        // Add GAID if available
-        // TODO(mastersam07): Enable this for GAID
-        // cachedGaid?.let {
-        //    payload["advertising_id"] = it
-        // }
-        
+
+        cachedGaid?.let {
+            payload["advertising_id"] = it
+        }
+
         return payload
     }
 }

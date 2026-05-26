@@ -1,29 +1,19 @@
 package xyz.useclippr.sdk.models
 
-/**
- * Parameters for creating a short link
- */
+import java.util.Date
+
 data class LinkParameters(
-    /** Deep link path (e.g., "/product/123") */
     val path: String,
-    
-    /** Custom metadata to attach to the link */
     val metadata: Map<String, Any?>? = null,
-    
-    /** Campaign name for attribution */
     val campaign: String? = null,
-    
-    /** Traffic source (e.g., "facebook", "twitter") */
     val source: String? = null,
-    
-    /** Marketing medium (e.g., "social", "email") */
     val medium: String? = null,
-    
-    /** Social meta tags for link previews */
     val socialTags: SocialMetaTags? = null,
-    
-    /** Custom alias for the short link (e.g., "summer-sale" → yourapp.clppr.xyz/summer-sale) */
-    val alias: String? = null
+    val alias: String? = null,
+    val iosFallbackUrl: String? = null,
+    val androidFallbackUrl: String? = null,
+    val webFallbackUrl: String? = null,
+    val expiresAt: Date? = null
 )
 
 /**

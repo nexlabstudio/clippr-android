@@ -7,6 +7,8 @@ import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -89,14 +91,7 @@ object Clippr {
         
         Logger.isEnabled = config.debug
         Logger.info("Clippr SDK initialized")
-        
-        // Fetch GAID in background (for paid ad attribution)
-        // TODO(mastersam07): Enable this for GAID
-        // scope.launch {
-        //    deviceInfo?.fetchAdvertisingId()
-        // }
-        
-        // Start checking for deferred link in background
+
         startDeferredLinkCheck()
     }
     
@@ -317,15 +312,21 @@ object Clippr {
         val referrerHelper = installReferrerHelper ?: return null
         
         Logger.debug("Checking for deferred deep link...")
-        
+
         try {
-            val referrerResult = referrerHelper.getInstallReferrer()
+            val referrerResult = coroutineScope {
+                val gaidJob = async { device.fetchAdvertisingId() }
+                val referrerDeferred = async { referrerHelper.getInstallReferrer() }
+                val result = referrerDeferred.await()
+                gaidJob.await()
+                result
+            }
             val referrer = referrerResult?.referrer
-            
+
             if (referrer != null) {
                 storage.installReferrer = referrer
             }
-            
+
             val payload = device.buildMatchPayload(installReferrer = referrer)
             
             val match = client.match(payload) ?: run {

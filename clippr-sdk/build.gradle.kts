@@ -42,8 +42,7 @@ dependencies {
     implementation("com.android.installreferrer:installreferrer:2.2")
     
     // Google Play Services Ads (for GAID - advertising ID)
-    // TODO(mastersam07): Enable this for GAID
-    // implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
+    implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
     
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")

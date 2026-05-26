@@ -120,6 +120,14 @@ internal class APIClient(private val config: ClipprConfig) {
         parameters.source?.let { body["source"] = it }
         parameters.medium?.let { body["medium"] = it }
         parameters.alias?.let { body["alias"] = it }
+        parameters.iosFallbackUrl?.let { body["ios_fallback_url"] = it }
+        parameters.androidFallbackUrl?.let { body["android_fallback_url"] = it }
+        parameters.webFallbackUrl?.let { body["web_fallback_url"] = it }
+        parameters.expiresAt?.let {
+            body["expires_at"] = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.US).apply {
+                timeZone = java.util.TimeZone.getTimeZone("UTC")
+            }.format(it)
+        }
 
         parameters.socialTags?.let { tags ->
             tags.title?.let { body["social_title"] = it }
