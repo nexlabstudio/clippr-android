@@ -108,6 +108,24 @@ internal class APIClient(private val config: ClipprConfig) {
     }
 
     /**
+     * Resolve a short code or alias to full link details. Used to enrich
+     * App Link clicks with backend-stored attribution + canonical deep-link path.
+     */
+    suspend fun resolveLink(identifier: String): ResolvedLink = withContext(Dispatchers.IO) {
+        val response = get("/sdk/links/resolve/$identifier")
+        val attribution = Attribution(
+            campaign = response.optString("campaign").takeIf { it.isNotEmpty() },
+            source = response.optString("source").takeIf { it.isNotEmpty() },
+            medium = response.optString("medium").takeIf { it.isNotEmpty() }
+        )
+        ResolvedLink(
+            deepLinkPath = response.optString("deep_link_path"),
+            metadata = response.optJSONObject("metadata")?.jsonToMap(),
+            attribution = attribution.takeIf { it.campaign != null || it.source != null || it.medium != null }
+        )
+    }
+
+    /**
      * Create a short link
      */
     suspend fun createLink(parameters: LinkParameters): ShortLink = withContext(Dispatchers.IO) {
@@ -149,6 +167,45 @@ internal class APIClient(private val config: ClipprConfig) {
             shortCode = shortCode,
             path = parameters.path
         )
+    }
+
+    /**
+     * Make a GET request
+     */
+    private fun get(endpoint: String): JSONObject {
+        val url = "${config.baseUrl}$endpoint"
+
+        Logger.debug("GET $endpoint")
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("X-API-Key", config.apiKey)
+            .get()
+            .build()
+
+        try {
+            client.newCall(request).execute().use { response ->
+                val responseBody = response.body?.string() ?: "{}"
+
+                Logger.debug("Response status: ${response.code}")
+
+                if (!response.isSuccessful) {
+                    val errorMessage = try {
+                        JSONObject(responseBody).optString("error")
+                    } catch (e: Exception) {
+                        null
+                    }
+                    throw ClipprException.ServerError(response.code, errorMessage)
+                }
+
+                return JSONObject(responseBody)
+            }
+        } catch (e: ClipprException) {
+            throw e
+        } catch (e: Exception) {
+            throw ClipprException.NetworkError(e)
+        }
     }
 
     /**
@@ -218,5 +275,11 @@ internal data class MatchResponse(
     val metadata: Map<String, Any?>?,
     val matchType: MatchType,
     val confidence: Double?,
+    val attribution: Attribution?
+)
+
+internal data class ResolvedLink(
+    val deepLinkPath: String,
+    val metadata: Map<String, Any?>?,
     val attribution: Attribution?
 )

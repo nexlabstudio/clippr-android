@@ -4,19 +4,12 @@ package xyz.useclippr.sdk.models
  * Represents a deep link received by the SDK
  */
 data class ClipprLink(
-    /** The deep link path (e.g., "/product/123") */
     val path: String,
-    
-    /** Custom metadata attached to the link */
+    val url: String? = null,
+    val shortCode: String? = null,
     val metadata: Map<String, Any?>? = null,
-    
-    /** Attribution data */
     val attribution: Attribution? = null,
-    
-    /** How this link was matched */
     val matchType: MatchType = MatchType.DIRECT,
-    
-    /** Confidence score (0.0 - 1.0) for probabilistic matches */
     val confidence: Double? = null
 )
 

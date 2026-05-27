@@ -65,7 +65,7 @@ afterEvaluate {
                 
                 groupId = "xyz.useclippr"
                 artifactId = "clippr"
-                version = "0.0.5"
+                version = "0.0.6"
                 
                 pom {
                     name.set("Clippr SDK")

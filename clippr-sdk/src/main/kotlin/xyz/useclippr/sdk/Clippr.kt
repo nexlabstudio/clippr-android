@@ -257,28 +257,53 @@ object Clippr {
             Logger.error("SDK not initialized")
             return false
         }
-        
+
         val uri = intent?.data ?: return false
-        
+
         Logger.debug("Handling intent: $uri")
-        
-        // Parse the URI to extract path
-        val link = parseAppLink(uri) ?: run {
+
+        val localLink = parseAppLink(uri) ?: run {
             Logger.debug("URI not a Clippr link")
             return false
         }
-        
-        // If getInitialLink hasn't been called yet, store as pending
+
+        // Deliver the locally parsed link immediately, then async-enrich.
+        deliver(localLink)
+
+        scope.launch {
+            enrich(localLink)?.let { deliver(it) }
+        }
+
+        return true
+    }
+
+    private suspend fun enrich(link: ClipprLink): ClipprLink? {
+        val client = apiClient ?: return null
+        val shortCode = link.shortCode ?: return null
+        return try {
+            val resolved = client.resolveLink(shortCode)
+            val merged = mutableMapOf<String, Any?>()
+            resolved.metadata?.let { merged.putAll(it) }
+            link.metadata?.let { merged.putAll(it) }
+            link.copy(
+                path = resolved.deepLinkPath.ifEmpty { link.path },
+                metadata = merged.ifEmpty { null },
+                attribution = resolved.attribution
+            )
+        } catch (e: Exception) {
+            Logger.error("Failed to resolve link $shortCode", e)
+            null
+        }
+    }
+
+    private fun deliver(link: ClipprLink) {
         if (!initialLinkRetrieved) {
             Logger.debug("Storing as initial link")
             pendingInitialLink = link
         } else {
-            // Otherwise, deliver via onLink callback
             Logger.debug("Delivering via onLink callback")
             onLink?.invoke(link)
         }
-        
-        return true
     }
     
     private fun startDeferredLinkCheck() {
@@ -367,21 +392,22 @@ object Clippr {
     }
     
     private fun parseAppLink(uri: Uri): ClipprLink? {
-        // Extract path from URI
-        var path = uri.path ?: return null
-        
-        // If path is empty or just "/", this might not be a valid deep link
+        val path = uri.path ?: return null
+
         if (path.isEmpty() || path == "/") {
             return null
         }
-        
-        // Parse query parameters as metadata
+
         val metadata: Map<String, Any?>? = uri.queryParameterNames.takeIf { it.isNotEmpty() }?.let { params ->
             params.associateWith { uri.getQueryParameter(it) }
         }
-        
+
+        val shortCode = path.trim('/').split('/').firstOrNull()?.takeIf { it.isNotEmpty() }
+
         return ClipprLink(
             path = path,
+            url = uri.toString(),
+            shortCode = shortCode,
             metadata = metadata,
             attribution = null,
             matchType = MatchType.DIRECT,
