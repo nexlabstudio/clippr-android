@@ -267,11 +267,12 @@ object Clippr {
             return false
         }
 
-        // Deliver the locally parsed link immediately, then async-enrich.
-        deliver(localLink)
-
+        // Try to enrich with backend-stored attribution + canonical deep-link
+        // path. Fall back to the local parse on any failure so onLink always
+        // fires exactly once per delivery.
         scope.launch {
-            enrich(localLink)?.let { deliver(it) }
+            val final = enrich(localLink) ?: localLink
+            deliver(final)
         }
 
         return true
